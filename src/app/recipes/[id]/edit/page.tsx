@@ -13,6 +13,7 @@ export default async function EditRecipePage({ params }: { params: { id: string 
     include: {
       ingredients: { orderBy: { order: "asc" } },
       steps: { orderBy: { order: "asc" } },
+      tags: { include: { tag: true } },
     },
   });
 
@@ -26,6 +27,7 @@ export default async function EditRecipePage({ params }: { params: { id: string 
           id: recipe.id,
           title: recipe.title,
           description: recipe.description ?? "",
+          cuisine: recipe.cuisine ?? "",
           prepTime: recipe.prepTime,
           cookTime: recipe.cookTime,
           servings: recipe.servings,
@@ -35,6 +37,7 @@ export default async function EditRecipePage({ params }: { params: { id: string 
             unit: i.unit ?? "",
           })),
           steps: recipe.steps.map((s) => ({ instruction: s.instruction })),
+          tags: recipe.tags.map(({ tag }) => tag.name),
         }}
       />
     </div>

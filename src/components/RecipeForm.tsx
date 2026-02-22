@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 
 type Ingredient = { name: string; quantity: string; unit: string };
@@ -11,11 +11,13 @@ type RecipeFormProps = {
     id?: string;
     title?: string;
     description?: string;
+    cuisine?: string;
     prepTime?: number | null;
     cookTime?: number | null;
     servings?: number | null;
     ingredients?: Ingredient[];
     steps?: Step[];
+    tags?: string[];
   };
 };
 
@@ -25,6 +27,7 @@ export function RecipeForm({ initial }: RecipeFormProps) {
 
   const [title, setTitle] = useState(initial?.title ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
+  const [cuisine, setCuisine] = useState(initial?.cuisine ?? "");
   const [prepTime, setPrepTime] = useState(String(initial?.prepTime ?? ""));
   const [cookTime, setCookTime] = useState(String(initial?.cookTime ?? ""));
   const [servings, setServings] = useState(String(initial?.servings ?? ""));
@@ -34,36 +37,67 @@ export function RecipeForm({ initial }: RecipeFormProps) {
   const [steps, setSteps] = useState<Step[]>(
     initial?.steps ?? [{ instruction: "" }]
   );
+  const [tags, setTags] = useState<string[]>(initial?.tags ?? []);
+  const [tagInput, setTagInput] = useState("");
+  const [existingTags, setExistingTags] = useState<{ id: string; name: string }[]>([]);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    fetch("/api/tags")
+      .then((r) => r.json())
+      .then(setExistingTags)
+      .catch(() => {});
+  }, []);
+
+  // --- Ingredients ---
   function addIngredient() {
     setIngredients([...ingredients, { name: "", quantity: "", unit: "" }]);
   }
-
   function removeIngredient(i: number) {
     setIngredients(ingredients.filter((_, idx) => idx !== i));
   }
-
   function updateIngredient(i: number, field: keyof Ingredient, value: string) {
     setIngredients(
       ingredients.map((ing, idx) => (idx === i ? { ...ing, [field]: value } : ing))
     );
   }
 
+  // --- Steps ---
   function addStep() {
     setSteps([...steps, { instruction: "" }]);
   }
-
   function removeStep(i: number) {
     setSteps(steps.filter((_, idx) => idx !== i));
   }
-
   function updateStep(i: number, value: string) {
     setSteps(steps.map((s, idx) => (idx === i ? { instruction: value } : s)));
   }
 
+  // --- Tags ---
+  function addTag(name: string) {
+    const normalized = name.trim().toLowerCase();
+    if (normalized && !tags.includes(normalized)) {
+      setTags([...tags, normalized]);
+    }
+    setTagInput("");
+  }
+  function removeTag(name: string) {
+    setTags(tags.filter((t) => t !== name));
+  }
+  function handleTagKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      addTag(tagInput);
+    }
+  }
+
+  const suggestedTags = existingTags.filter(
+    (t) => !tags.includes(t.name) && t.name.includes(tagInput.toLowerCase())
+  );
+
+  // --- Submit ---
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -72,11 +106,13 @@ export function RecipeForm({ initial }: RecipeFormProps) {
     const payload = {
       title,
       description,
+      cuisine: cuisine.trim() || null,
       prepTime: prepTime || null,
       cookTime: cookTime || null,
       servings: servings || null,
       ingredients: ingredients.filter((i) => i.name.trim()),
       steps: steps.filter((s) => s.instruction.trim()),
+      tags,
     };
 
     const url = isEditing ? `/api/recipes/${initial?.id}` : "/api/recipes";
@@ -96,7 +132,6 @@ export function RecipeForm({ initial }: RecipeFormProps) {
 
     const recipe = await res.json();
 
-    // Upload images if any
     for (const file of imageFiles) {
       const form = new FormData();
       form.append("file", file);
@@ -111,13 +146,11 @@ export function RecipeForm({ initial }: RecipeFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-2xl">
       {/* Basic info */}
-      <section className="bg-white rounded-2xl border border-stone-200 p-6 space-y-4">
+      <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-4">
         <h2 className="font-semibold text-stone-800">Basic info</h2>
 
         <div>
-          <label className="block text-sm font-medium text-stone-800 mb-1">
-            Title *
-          </label>
+          <label className="block text-sm font-medium text-stone-800 mb-1">Title *</label>
           <input
             required
             value={title}
@@ -127,9 +160,7 @@ export function RecipeForm({ initial }: RecipeFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-stone-800 mb-1">
-            Description
-          </label>
+          <label className="block text-sm font-medium text-stone-800 mb-1">Description</label>
           <textarea
             rows={3}
             value={description}
@@ -138,98 +169,123 @@ export function RecipeForm({ initial }: RecipeFormProps) {
           />
         </div>
 
+        <div>
+          <label className="block text-sm font-medium text-stone-800 mb-1">Cuisine</label>
+          <input
+            placeholder="e.g. Italian, Japanese, French…"
+            value={cuisine}
+            onChange={(e) => setCuisine(e.target.value)}
+            className="field"
+          />
+        </div>
+
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-stone-800 mb-1">
-              Prep (min)
-            </label>
-            <input
-              type="number"
-              min="0"
-              value={prepTime}
-              onChange={(e) => setPrepTime(e.target.value)}
-              className="field"
-            />
+            <label className="block text-sm font-medium text-stone-800 mb-1">Prep (min)</label>
+            <input type="number" min="0" value={prepTime} onChange={(e) => setPrepTime(e.target.value)} className="field" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-stone-800 mb-1">
-              Cook (min)
-            </label>
-            <input
-              type="number"
-              min="0"
-              value={cookTime}
-              onChange={(e) => setCookTime(e.target.value)}
-              className="field"
-            />
+            <label className="block text-sm font-medium text-stone-800 mb-1">Cook (min)</label>
+            <input type="number" min="0" value={cookTime} onChange={(e) => setCookTime(e.target.value)} className="field" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-stone-800 mb-1">
-              Servings
-            </label>
-            <input
-              type="number"
-              min="1"
-              value={servings}
-              onChange={(e) => setServings(e.target.value)}
-              className="field"
-            />
+            <label className="block text-sm font-medium text-stone-800 mb-1">Servings</label>
+            <input type="number" min="1" value={servings} onChange={(e) => setServings(e.target.value)} className="field" />
           </div>
         </div>
       </section>
 
+      {/* Tags */}
+      <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-3">
+        <h2 className="font-semibold text-stone-800">Tags</h2>
+
+        {/* Selected tags */}
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {tags.map((t) => (
+              <span key={t} className="tag-chip flex items-center gap-1">
+                #{t}
+                <button
+                  type="button"
+                  onClick={() => removeTag(t)}
+                  className="text-orange-400 hover:text-orange-700 leading-none"
+                >
+                  ✕
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Tag input */}
+        <input
+          placeholder="Type a tag and press Enter or comma…"
+          value={tagInput}
+          onChange={(e) => setTagInput(e.target.value)}
+          onKeyDown={handleTagKeyDown}
+          className="field"
+        />
+
+        {/* Suggestions from existing tags */}
+        {tagInput && suggestedTags.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {suggestedTags.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => addTag(t.name)}
+                className="badge hover:bg-stone-200 transition-colors cursor-pointer"
+              >
+                + {t.name}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Existing tags as quick-add chips */}
+        {!tagInput && existingTags.filter((t) => !tags.includes(t.name)).length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {existingTags
+              .filter((t) => !tags.includes(t.name))
+              .map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => addTag(t.name)}
+                  className="badge hover:bg-stone-200 transition-colors cursor-pointer"
+                >
+                  + {t.name}
+                </button>
+              ))}
+          </div>
+        )}
+      </section>
+
       {/* Ingredients */}
-      <section className="bg-white rounded-2xl border border-stone-200 p-6 space-y-3">
+      <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-3">
         <h2 className="font-semibold text-stone-800">Ingredients</h2>
 
         {ingredients.map((ing, i) => (
           <div key={i} className="flex gap-2 items-center">
-            <input
-              placeholder="Qty"
-              value={ing.quantity}
-              onChange={(e) => updateIngredient(i, "quantity", e.target.value)}
-              className="field w-16"
-            />
-            <input
-              placeholder="Unit"
-              value={ing.unit}
-              onChange={(e) => updateIngredient(i, "unit", e.target.value)}
-              className="field w-20"
-            />
-            <input
-              placeholder="Ingredient name"
-              value={ing.name}
-              onChange={(e) => updateIngredient(i, "name", e.target.value)}
-              className="field flex-1"
-            />
-            <button
-              type="button"
-              onClick={() => removeIngredient(i)}
-              className="text-stone-400 hover:text-red-500 transition-colors px-1"
-            >
-              ✕
-            </button>
+            <input placeholder="Qty" value={ing.quantity} onChange={(e) => updateIngredient(i, "quantity", e.target.value)} className="field w-16" />
+            <input placeholder="Unit" value={ing.unit} onChange={(e) => updateIngredient(i, "unit", e.target.value)} className="field w-20" />
+            <input placeholder="Ingredient name" value={ing.name} onChange={(e) => updateIngredient(i, "name", e.target.value)} className="field flex-1" />
+            <button type="button" onClick={() => removeIngredient(i)} className="text-stone-400 hover:text-red-500 transition-colors px-1">✕</button>
           </div>
         ))}
 
-        <button
-          type="button"
-          onClick={addIngredient}
-          className="text-sm text-orange-500 hover:text-orange-600 font-medium"
-        >
+        <button type="button" onClick={addIngredient} className="text-sm text-orange-500 hover:text-orange-600 font-medium">
           + Add ingredient
         </button>
       </section>
 
       {/* Steps */}
-      <section className="bg-white rounded-2xl border border-stone-200 p-6 space-y-3">
+      <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-3">
         <h2 className="font-semibold text-stone-800">Steps</h2>
 
         {steps.map((step, i) => (
           <div key={i} className="flex gap-3 items-start">
-            <span className="mt-2 text-sm font-bold text-stone-400 w-5 shrink-0">
-              {i + 1}
-            </span>
+            <span className="mt-2 text-sm font-bold text-stone-400 w-5 shrink-0">{i + 1}</span>
             <textarea
               rows={2}
               placeholder={`Step ${i + 1}`}
@@ -237,28 +293,18 @@ export function RecipeForm({ initial }: RecipeFormProps) {
               onChange={(e) => updateStep(i, e.target.value)}
               className="field flex-1"
             />
-            <button
-              type="button"
-              onClick={() => removeStep(i)}
-              className="mt-2 text-stone-400 hover:text-red-500 transition-colors px-1"
-            >
-              ✕
-            </button>
+            <button type="button" onClick={() => removeStep(i)} className="mt-2 text-stone-400 hover:text-red-500 transition-colors px-1">✕</button>
           </div>
         ))}
 
-        <button
-          type="button"
-          onClick={addStep}
-          className="text-sm text-orange-500 hover:text-orange-600 font-medium"
-        >
+        <button type="button" onClick={addStep} className="text-sm text-orange-500 hover:text-orange-600 font-medium">
           + Add step
         </button>
       </section>
 
       {/* Photos */}
       {!isEditing && (
-        <section className="bg-white rounded-2xl border border-stone-200 p-6 space-y-3">
+        <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-3">
           <h2 className="font-semibold text-stone-800">Photos</h2>
           <input
             type="file"

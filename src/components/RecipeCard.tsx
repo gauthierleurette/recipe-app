@@ -6,11 +6,13 @@ type RecipeCardProps = {
     id: string;
     title: string;
     description: string | null;
+    cuisine: string | null;
     prepTime: number | null;
     cookTime: number | null;
     servings: number | null;
     images: { path: string; alt: string }[];
     ingredients: { id: string; name: string; quantity: string | null; unit: string | null }[];
+    tags: { tag: { id: string; name: string } }[];
     author: { id: string; name: string };
   };
 };
@@ -20,7 +22,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
 
   return (
     <Link href={`/recipes/${recipe.id}`}>
-      <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full flex flex-col">
+      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer h-full flex flex-col overflow-hidden">
         {recipe.images[0] ? (
           <div className="relative h-48 w-full">
             <Image
@@ -41,17 +43,33 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             {recipe.title}
           </h2>
 
+          {recipe.cuisine && (
+            <span className="badge mb-2 self-start">{recipe.cuisine}</span>
+          )}
+
           {recipe.description && (
             <p className="text-sm text-stone-500 mb-3 line-clamp-2">
               {recipe.description}
             </p>
           )}
 
-          <div className="mt-auto flex items-center gap-3 text-xs text-stone-400">
-            {totalTime > 0 && <span>{totalTime} min</span>}
-            {recipe.servings && <span>{recipe.servings} servings</span>}
-            {recipe.ingredients.length > 0 && (
-              <span>{recipe.ingredients.length} ingredients</span>
+          <div className="mt-auto space-y-2">
+            <div className="flex items-center gap-3 text-xs text-stone-400">
+              {totalTime > 0 && <span>{totalTime} min</span>}
+              {recipe.servings && <span>{recipe.servings} servings</span>}
+              {recipe.ingredients.length > 0 && (
+                <span>{recipe.ingredients.length} ingredients</span>
+              )}
+            </div>
+
+            {recipe.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {recipe.tags.map(({ tag }) => (
+                  <span key={tag.id} className="tag-chip">
+                    #{tag.name}
+                  </span>
+                ))}
+              </div>
             )}
           </div>
         </div>

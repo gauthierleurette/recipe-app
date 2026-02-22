@@ -14,6 +14,7 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
       ingredients: { orderBy: { order: "asc" } },
       steps: { orderBy: { order: "asc" } },
       images: true,
+      tags: { include: { tag: true } },
     },
   });
 
@@ -26,16 +27,30 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { title, description, prepTime, cookTime, servings, ingredients, steps } = body;
+  const { title, description, cuisine, prepTime, cookTime, servings, ingredients, steps, tags } = body;
+
+  // Upsert tags and collect their IDs
+  const tagConnects = await Promise.all(
+    (tags ?? [] as string[]).map(async (name: string) => {
+      const tag = await prisma.tag.upsert({
+        where: { name },
+        update: {},
+        create: { name },
+      });
+      return { tagId: tag.id };
+    })
+  );
 
   await prisma.ingredient.deleteMany({ where: { recipeId: params.id } });
   await prisma.step.deleteMany({ where: { recipeId: params.id } });
+  await prisma.recipeTag.deleteMany({ where: { recipeId: params.id } });
 
   const recipe = await prisma.recipe.update({
     where: { id: params.id },
     data: {
       title,
       description,
+      cuisine: cuisine || null,
       prepTime: prepTime ? Number(prepTime) : null,
       cookTime: cookTime ? Number(cookTime) : null,
       servings: servings ? Number(servings) : null,
@@ -55,8 +70,9 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
           instruction: s.instruction,
         })),
       },
+      tags: { create: tagConnects },
     },
-    include: { ingredients: true, steps: true, images: true },
+    include: { ingredients: true, steps: true, images: true, tags: { include: { tag: true } } },
   });
 
   return NextResponse.json(recipe);

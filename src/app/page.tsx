@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { RecipeCard } from "@/components/RecipeCard";
+import { RecipeGrid } from "@/components/RecipeGrid";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -14,6 +14,7 @@ export default async function Home() {
       author: { select: { id: true, name: true } },
       images: { take: 1 },
       ingredients: true,
+      tags: { include: { tag: true } },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -37,11 +38,7 @@ export default async function Home() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
-          ))}
-        </div>
+        <RecipeGrid recipes={recipes} />
       )}
     </div>
   );
