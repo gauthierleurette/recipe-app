@@ -112,35 +112,35 @@ export function RecipeForm({ initial }: RecipeFormProps) {
     <form onSubmit={handleSubmit} className="space-y-8 max-w-2xl">
       {/* Basic info */}
       <section className="bg-white rounded-2xl border border-stone-200 p-6 space-y-4">
-        <h2 className="font-semibold text-stone-700">Basic info</h2>
+        <h2 className="font-semibold text-stone-800">Basic info</h2>
 
         <div>
-          <label className="block text-sm font-medium text-stone-700 mb-1">
+          <label className="block text-sm font-medium text-stone-800 mb-1">
             Title *
           </label>
           <input
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="field"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-stone-700 mb-1">
+          <label className="block text-sm font-medium text-stone-800 mb-1">
             Description
           </label>
           <textarea
             rows={3}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="field"
           />
         </div>
 
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">
+            <label className="block text-sm font-medium text-stone-800 mb-1">
               Prep (min)
             </label>
             <input
@@ -148,11 +148,11 @@ export function RecipeForm({ initial }: RecipeFormProps) {
               min="0"
               value={prepTime}
               onChange={(e) => setPrepTime(e.target.value)}
-              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="field"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">
+            <label className="block text-sm font-medium text-stone-800 mb-1">
               Cook (min)
             </label>
             <input
@@ -160,11 +160,11 @@ export function RecipeForm({ initial }: RecipeFormProps) {
               min="0"
               value={cookTime}
               onChange={(e) => setCookTime(e.target.value)}
-              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="field"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">
+            <label className="block text-sm font-medium text-stone-800 mb-1">
               Servings
             </label>
             <input
@@ -172,7 +172,7 @@ export function RecipeForm({ initial }: RecipeFormProps) {
               min="1"
               value={servings}
               onChange={(e) => setServings(e.target.value)}
-              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="field"
             />
           </div>
         </div>
@@ -180,7 +180,7 @@ export function RecipeForm({ initial }: RecipeFormProps) {
 
       {/* Ingredients */}
       <section className="bg-white rounded-2xl border border-stone-200 p-6 space-y-3">
-        <h2 className="font-semibold text-stone-700">Ingredients</h2>
+        <h2 className="font-semibold text-stone-800">Ingredients</h2>
 
         {ingredients.map((ing, i) => (
           <div key={i} className="flex gap-2 items-center">
@@ -188,19 +188,19 @@ export function RecipeForm({ initial }: RecipeFormProps) {
               placeholder="Qty"
               value={ing.quantity}
               onChange={(e) => updateIngredient(i, "quantity", e.target.value)}
-              className="w-16 border border-stone-300 rounded-lg px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="field w-16"
             />
             <input
               placeholder="Unit"
               value={ing.unit}
               onChange={(e) => updateIngredient(i, "unit", e.target.value)}
-              className="w-20 border border-stone-300 rounded-lg px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="field w-20"
             />
             <input
               placeholder="Ingredient name"
               value={ing.name}
               onChange={(e) => updateIngredient(i, "name", e.target.value)}
-              className="flex-1 border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="field flex-1"
             />
             <button
               type="button"
@@ -223,7 +223,7 @@ export function RecipeForm({ initial }: RecipeFormProps) {
 
       {/* Steps */}
       <section className="bg-white rounded-2xl border border-stone-200 p-6 space-y-3">
-        <h2 className="font-semibold text-stone-700">Steps</h2>
+        <h2 className="font-semibold text-stone-800">Steps</h2>
 
         {steps.map((step, i) => (
           <div key={i} className="flex gap-3 items-start">
@@ -235,7 +235,7 @@ export function RecipeForm({ initial }: RecipeFormProps) {
               placeholder={`Step ${i + 1}`}
               value={step.instruction}
               onChange={(e) => updateStep(i, e.target.value)}
-              className="flex-1 border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="field flex-1"
             />
             <button
               type="button"
@@ -259,13 +259,13 @@ export function RecipeForm({ initial }: RecipeFormProps) {
       {/* Photos */}
       {!isEditing && (
         <section className="bg-white rounded-2xl border border-stone-200 p-6 space-y-3">
-          <h2 className="font-semibold text-stone-700">Photos</h2>
+          <h2 className="font-semibold text-stone-800">Photos</h2>
           <input
             type="file"
             accept="image/*"
             multiple
             onChange={(e) => setImageFiles(Array.from(e.target.files ?? []))}
-            className="text-sm text-stone-600"
+            className="text-sm text-stone-700 file:mr-3 file:px-3 file:py-1.5 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100"
           />
         </section>
       )}
