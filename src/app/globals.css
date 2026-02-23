@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .field {
+    @apply w-full bg-white text-stone-900 border border-stone-300 rounded-lg px-3 py-2 text-sm
+           placeholder:text-stone-400
+           focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent;
+  }
+
+  .badge {
+    @apply inline-flex items-center bg-stone-100 text-stone-600 text-xs font-medium px-2 py-0.5 rounded-full;
+  }
+
+  .tag-chip {
+    @apply inline-flex items-center bg-orange-50 text-orange-700 text-xs font-medium px-2 py-0.5 rounded-full border border-orange-200;
+  }
+}
