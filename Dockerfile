@@ -19,6 +19,8 @@ FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
+RUN apk add --no-cache openssl
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
@@ -30,7 +32,9 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
-RUN mkdir -p uploads data && chown nextjs:nodejs uploads data
+RUN mkdir -p uploads data \
+    && chown nextjs:nodejs uploads data \
+    && chown -R nextjs:nodejs node_modules/.prisma node_modules/@prisma node_modules/prisma
 
 USER nextjs
 
