@@ -13,7 +13,7 @@ export default async function NewRecipePage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-stone-800 mb-6">{t.newRecipe}</h1>
+      <h1 className="font-display text-2xl font-bold text-ink mb-6">{t.newRecipe}</h1>
       <RecipeForm />
     </div>
   );

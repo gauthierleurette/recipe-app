@@ -94,7 +94,7 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
               <button
                 type="button"
                 onClick={() => removeTag(tag)}
-                className="text-orange-400 hover:text-orange-700 leading-none"
+                className="text-brand hover:text-brand-hover leading-none"
               >
                 ✕
               </button>
@@ -116,18 +116,18 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
 
         {/* Dropdown */}
         {open && hasDropdownContent && (
-          <div className="absolute z-20 mt-1 w-full bg-white border border-stone-200 rounded-xl shadow-md max-h-72 overflow-y-auto">
+          <div className="absolute z-20 mt-1 w-full bg-surface border border-rim rounded-xl shadow-md max-h-72 overflow-y-auto">
             {/* Custom existing tags from DB */}
             {filteredExisting.length > 0 && (
               <div className="p-2">
-                <p className="text-xs text-stone-400 font-medium px-2 mb-1">{t.existingTags}</p>
+                <p className="text-xs text-ink-3 font-medium px-2 mb-1">{t.existingTags}</p>
                 <div className="flex flex-wrap gap-1.5 px-1">
                   {filteredExisting.map((tag) => (
                     <button
                       key={tag.id}
                       type="button"
                       onMouseDown={(e) => { e.preventDefault(); addTag(tag.name); }}
-                      className="badge hover:bg-stone-200 transition-colors cursor-pointer"
+                      className="badge hover:bg-surface-alt transition-colors cursor-pointer"
                     >
                       + {t.tagLabels[tag.name] ?? tag.name}
                     </button>
@@ -137,13 +137,13 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
             )}
 
             {/* Predefined categories — always visible, selected ones highlighted */}
-            <div className="p-2 border-t border-stone-100">
+            <div className="p-2 border-t border-rim">
               {Object.entries(t.tagCategories).map(([key, category]) => {
                 const visibleTags = category.tags.filter(matchesQuery);
                 if (visibleTags.length === 0) return null;
                 return (
                   <div key={key} className="mb-2 last:mb-0">
-                    <p className="text-xs text-stone-400 font-medium px-2 mb-1">{category.label}</p>
+                    <p className="text-xs text-ink-3 font-medium px-2 mb-1">{category.label}</p>
                     <div className="flex flex-wrap gap-1.5 px-1">
                       {visibleTags.map((name) => {
                         const isSelected = selected.includes(name);
@@ -154,8 +154,8 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
                             onMouseDown={(e) => { e.preventDefault(); toggleTag(name); }}
                             className={`badge transition-colors cursor-pointer ${
                               isSelected
-                                ? "bg-orange-100 text-orange-700 border-orange-200 hover:bg-orange-200"
-                                : "hover:bg-stone-200"
+                                ? "bg-brand-mid text-brand border-brand-line hover:bg-brand-tint"
+                                : "hover:bg-surface-alt"
                             }`}
                           >
                             {isSelected ? "✓" : "+"} {t.tagLabels[name] ?? name}

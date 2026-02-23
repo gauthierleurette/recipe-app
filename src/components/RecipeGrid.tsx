@@ -60,12 +60,12 @@ export function RecipeGrid({ recipes }: { recipes: Recipe[] }) {
   if (recipes.length === 0) {
     return (
       <div>
-        <h1 className="text-2xl font-bold text-stone-800 mb-6">{t.noRecipesYet}</h1>
-        <div className="text-center py-16 text-stone-400">
+        <h1 className="font-display text-2xl font-bold text-ink mb-6">{t.noRecipesYet}</h1>
+        <div className="text-center py-16 text-ink-3">
           <p className="text-lg">{t.startBuilding}</p>
           <Link
             href="/recipes/new"
-            className="mt-4 inline-block bg-orange-500 hover:bg-orange-600 text-white font-medium px-4 py-2 rounded-lg transition-colors"
+            className="mt-4 inline-block bg-brand hover:bg-brand-hover text-white font-medium px-4 py-2 rounded-lg transition-colors"
           >
             {t.addFirstRecipe}
           </Link>
@@ -76,13 +76,13 @@ export function RecipeGrid({ recipes }: { recipes: Recipe[] }) {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-stone-800 mb-6">{t.recipes(recipes.length)}</h1>
+      <h1 className="font-display text-2xl font-bold text-ink mb-6">{t.recipes(recipes.length)}</h1>
 
       {/* Search + cuisine filter */}
       <div className="flex gap-3 mb-4">
         <Link
           href="/recipes/new"
-          className="shrink-0 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors whitespace-nowrap"
+          className="shrink-0 bg-brand hover:bg-brand-hover text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors whitespace-nowrap"
         >
           {t.addRecipe}
         </Link>
@@ -120,8 +120,8 @@ export function RecipeGrid({ recipes }: { recipes: Recipe[] }) {
                 onClick={() => toggleTag(tag.name)}
                 className={`text-xs font-medium px-2.5 py-1 rounded-full border transition-colors ${
                   active
-                    ? "bg-orange-500 text-white border-orange-500"
-                    : "bg-white text-stone-600 border-stone-300 hover:border-orange-400 hover:text-orange-600"
+                    ? "bg-brand text-white border-brand"
+                    : "bg-surface text-ink-2 border-rim-strong hover:border-brand hover:text-brand"
                 }`}
               >
                 #{tag.name}
@@ -133,7 +133,7 @@ export function RecipeGrid({ recipes }: { recipes: Recipe[] }) {
 
       {/* Results */}
       {filtered.length === 0 ? (
-        <div className="text-center py-16 text-stone-400">
+        <div className="text-center py-16 text-ink-3">
           {hasFilters ? (
             <p>{t.noResults}</p>
           ) : (

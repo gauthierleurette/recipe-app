@@ -36,14 +36,14 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center">
-      <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-8 w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-stone-800 mb-6 text-center">
+      <div className="bg-surface rounded-2xl shadow-sm border border-rim p-8 w-full max-w-sm">
+        <h1 className="font-display text-2xl font-bold text-ink mb-6 text-center">
           {t.appName}
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-stone-800 mb-1">
+            <label className="block text-sm font-medium text-ink mb-1">
               {t.emailField}
             </label>
             <input
@@ -56,7 +56,7 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-800 mb-1">
+            <label className="block text-sm font-medium text-ink mb-1">
               {t.passwordField}
             </label>
             <input
@@ -73,15 +73,15 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-60 text-white font-medium py-2 rounded-lg transition-colors"
+            className="w-full bg-brand hover:bg-brand-hover disabled:opacity-60 text-white font-medium py-2 rounded-lg transition-colors"
           >
             {loading ? t.signingIn : t.signIn}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-stone-500">
+        <p className="mt-4 text-center text-sm text-ink-3">
           {t.noAccount}{" "}
-          <Link href="/register" className="text-orange-500 hover:text-orange-600 font-medium">
+          <Link href="/register" className="text-brand hover:text-brand-hover font-medium">
             {t.createAccount}
           </Link>
         </p>

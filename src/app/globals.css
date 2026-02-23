@@ -2,18 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --page-bg:      #FAF8F4;
+  --surface:      #FFFFFF;
+  --surface-alt:  #F3EDE6;
+  --rim:          #E6DDD4;
+  --rim-strong:   #CFC5BA;
+  --ink:          #1C1814;
+  --ink-2:        #6B5F56;
+  --ink-3:        #9E9189;
+  --brand:        #C4622D;
+  --brand-hover:  #A85227;
+  --brand-tint:   #FBF0E9;
+  --brand-mid:    #F2DBCA;
+  --brand-line:   #D9AB8E;
+}
+
+.dark {
+  --page-bg:      #17110E;
+  --surface:      #221A15;
+  --surface-alt:  #2D2319;
+  --rim:          #3E2F26;
+  --rim-strong:   #52413A;
+  --ink:          #F5EDE6;
+  --ink-2:        #BFB0A6;
+  --ink-3:        #8A7A72;
+  --brand:        #E07840;
+  --brand-hover:  #F08D55;
+  --brand-tint:   #2A1B11;
+  --brand-mid:    #3D2115;
+  --brand-line:   #6B3A24;
+}
+
 @layer components {
   .field {
-    @apply w-full bg-white text-stone-900 border border-stone-300 rounded-lg px-3 py-2 text-sm
-           placeholder:text-stone-400
-           focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent;
+    @apply w-full bg-surface text-ink border border-rim-strong rounded-lg px-3 py-2 text-sm
+           placeholder:text-ink-3
+           focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent;
   }
 
   .badge {
-    @apply inline-flex items-center bg-stone-100 text-stone-600 text-xs font-medium px-2 py-0.5 rounded-full;
+    @apply inline-flex items-center bg-surface-alt text-ink-2 text-xs font-medium px-2 py-0.5 rounded-full;
   }
 
   .tag-chip {
-    @apply inline-flex items-center bg-orange-50 text-orange-700 text-xs font-medium px-2 py-0.5 rounded-full border border-orange-200;
+    @apply inline-flex items-center bg-brand-tint text-brand text-xs font-medium px-2 py-0.5 rounded-full border border-brand-line;
   }
 }

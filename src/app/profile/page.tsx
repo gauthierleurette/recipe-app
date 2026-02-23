@@ -60,22 +60,22 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-md">
-      <h1 className="text-2xl font-bold text-stone-800 mb-6">{t.profile}</h1>
+      <h1 className="font-display text-2xl font-bold text-ink mb-6">{t.profile}</h1>
 
       {/* Account info */}
-      <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 mb-6 space-y-3">
-        <h2 className="font-semibold text-stone-800">{t.accountInfo}</h2>
-        <p className="text-sm text-stone-600">{session.user.name}</p>
-        <p className="text-sm text-stone-400">{session.user.email}</p>
+      <section className="bg-surface rounded-2xl border border-rim shadow-sm p-6 mb-6 space-y-3">
+        <h2 className="font-display font-semibold text-ink">{t.accountInfo}</h2>
+        <p className="text-sm text-ink-2">{session.user.name}</p>
+        <p className="text-sm text-ink-3">{session.user.email}</p>
       </section>
 
       {/* Change password */}
-      <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-4">
-        <h2 className="font-semibold text-stone-800">{t.changePassword}</h2>
+      <section className="bg-surface rounded-2xl border border-rim shadow-sm p-6 space-y-4">
+        <h2 className="font-display font-semibold text-ink">{t.changePassword}</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-stone-800 mb-1">
+            <label className="block text-sm font-medium text-ink mb-1">
               {t.currentPassword}
             </label>
             <input
@@ -88,7 +88,7 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-800 mb-1">
+            <label className="block text-sm font-medium text-ink mb-1">
               {t.newPassword}
             </label>
             <input
@@ -101,7 +101,7 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-800 mb-1">
+            <label className="block text-sm font-medium text-ink mb-1">
               {t.confirmNewPassword}
             </label>
             <input
@@ -119,7 +119,7 @@ export default function ProfilePage() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-orange-500 hover:bg-orange-600 disabled:opacity-60 text-white font-medium px-6 py-2.5 rounded-lg transition-colors"
+            className="bg-brand hover:bg-brand-hover disabled:opacity-60 text-white font-medium px-6 py-2.5 rounded-lg transition-colors"
           >
             {loading ? t.saving : t.changePassword}
           </button>
