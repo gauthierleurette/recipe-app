@@ -27,7 +27,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { title, description, cuisine, prepTime, cookTime, servings, ingredients, steps, tags } = body;
+  const { title, description, cuisine, madeOn, prepTime, cookTime, servings, ingredients, steps, tags } = body;
 
   // Upsert tags and collect their IDs
   const tagConnects = await Promise.all(
@@ -51,6 +51,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       title,
       description,
       cuisine: cuisine || null,
+      madeOn: madeOn ? new Date(madeOn) : null,
       prepTime: prepTime ? Number(prepTime) : null,
       cookTime: cookTime ? Number(cookTime) : null,
       servings: servings ? Number(servings) : null,

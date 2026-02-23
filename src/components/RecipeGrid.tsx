@@ -2,12 +2,14 @@
 
 import { useState, useMemo } from "react";
 import { RecipeCard } from "./RecipeCard";
+import { useLocale } from "@/context/LocaleContext";
 
 type Recipe = {
   id: string;
   title: string;
   description: string | null;
   cuisine: string | null;
+  madeOn: Date | string | null;
   prepTime: number | null;
   cookTime: number | null;
   servings: number | null;
@@ -18,13 +20,14 @@ type Recipe = {
 };
 
 export function RecipeGrid({ recipes }: { recipes: Recipe[] }) {
+  const { t } = useLocale();
   const [query, setQuery] = useState("");
-  const [selectedCuisine, setSelectedCuisine] = useState("All");
+  const [selectedCuisine, setSelectedCuisine] = useState("all");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const cuisines = useMemo(() => {
     const set = new Set(recipes.map((r) => r.cuisine).filter(Boolean) as string[]);
-    return ["All", ...Array.from(set).sort()];
+    return Array.from(set).sort();
   }, [recipes]);
 
   const allTags = useMemo(() => {
@@ -44,14 +47,14 @@ export function RecipeGrid({ recipes }: { recipes: Recipe[] }) {
   const filtered = useMemo(() => {
     return recipes.filter((r) => {
       const matchesQuery = r.title.toLowerCase().includes(query.toLowerCase());
-      const matchesCuisine = selectedCuisine === "All" || r.cuisine === selectedCuisine;
+      const matchesCuisine = selectedCuisine === "all" || r.cuisine === selectedCuisine;
       const recipeTags = r.tags.map(({ tag }) => tag.name);
       const matchesTags = selectedTags.every((t) => recipeTags.includes(t));
       return matchesQuery && matchesCuisine && matchesTags;
     });
   }, [recipes, query, selectedCuisine, selectedTags]);
 
-  const hasFilters = query || selectedCuisine !== "All" || selectedTags.length > 0;
+  const hasFilters = query || selectedCuisine !== "all" || selectedTags.length > 0;
 
   return (
     <div>
@@ -59,17 +62,18 @@ export function RecipeGrid({ recipes }: { recipes: Recipe[] }) {
       <div className="flex gap-3 mb-4">
         <input
           type="search"
-          placeholder="Search recipes…"
+          placeholder={t.searchPlaceholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="field flex-1"
         />
-        {cuisines.length > 1 && (
+        {cuisines.length > 0 && (
           <select
             value={selectedCuisine}
             onChange={(e) => setSelectedCuisine(e.target.value)}
             className="field w-auto"
           >
+            <option value="all">{t.allCuisines}</option>
             {cuisines.map((c) => (
               <option key={c} value={c}>
                 {c}
@@ -105,9 +109,9 @@ export function RecipeGrid({ recipes }: { recipes: Recipe[] }) {
       {filtered.length === 0 ? (
         <div className="text-center py-16 text-stone-400">
           {hasFilters ? (
-            <p>No recipes match your filters.</p>
+            <p>{t.noResults}</p>
           ) : (
-            <p>No recipes yet.</p>
+            <p>{t.noRecipesYet}</p>
           )}
         </div>
       ) : (

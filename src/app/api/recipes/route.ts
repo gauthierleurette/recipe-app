@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { title, description, cuisine, prepTime, cookTime, servings, ingredients, steps, tags } = body;
+  const { title, description, cuisine, madeOn, prepTime, cookTime, servings, ingredients, steps, tags } = body;
 
   if (!title) return NextResponse.json({ error: "Title is required" }, { status: 400 });
 
@@ -46,6 +46,7 @@ export async function POST(req: NextRequest) {
       title,
       description,
       cuisine: cuisine || null,
+      madeOn: madeOn ? new Date(madeOn) : null,
       prepTime: prepTime ? Number(prepTime) : null,
       cookTime: cookTime ? Number(cookTime) : null,
       servings: servings ? Number(servings) : null,
