@@ -19,6 +19,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "file and recipeId are required" }, { status: 400 });
   }
 
+  const MAX_BYTES = 20 * 1024 * 1024; // 20 MB
+  if (file.size > MAX_BYTES) {
+    return NextResponse.json({ error: "File too large (max 20 MB)" }, { status: 413 });
+  }
+
   const filename = `${randomUUID()}.jpg`;
   const dir = path.join(process.cwd(), "uploads", recipeId);
   await mkdir(dir, { recursive: true });

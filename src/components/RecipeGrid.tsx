@@ -80,6 +80,12 @@ export function RecipeGrid({ recipes }: { recipes: Recipe[] }) {
 
       {/* Search + cuisine filter */}
       <div className="flex gap-3 mb-4">
+        <Link
+          href="/recipes/new"
+          className="shrink-0 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors whitespace-nowrap"
+        >
+          {t.addRecipe}
+        </Link>
         <input
           type="search"
           placeholder={t.searchPlaceholder}

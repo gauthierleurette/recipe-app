@@ -5,10 +5,31 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useLocale } from "@/context/LocaleContext";
 
+function FlagFR() {
+  return (
+    <svg width="20" height="14" viewBox="0 0 30 20" className="rounded-sm inline-block align-middle">
+      <rect width="10" height="20" fill="#002395" />
+      <rect x="10" width="10" height="20" fill="#fff" />
+      <rect x="20" width="10" height="20" fill="#ED2939" />
+    </svg>
+  );
+}
+
+function FlagGB() {
+  return (
+    <svg width="20" height="14" viewBox="0 0 60 40" className="rounded-sm inline-block align-middle">
+      <rect width="60" height="40" fill="#012169" />
+      <path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" strokeWidth="8" />
+      <path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" strokeWidth="5" />
+      <path d="M30,0 V40 M0,20 H60" stroke="#fff" strokeWidth="13" />
+      <path d="M30,0 V40 M0,20 H60" stroke="#C8102E" strokeWidth="8" />
+    </svg>
+  );
+}
+
 export function Navbar() {
   const { data: session } = useSession();
   const { t, locale, setLocale } = useLocale();
-  const langLabel = locale === "en" ? "🇬🇧 EN" : "🇫🇷 FR";
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -21,9 +42,10 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setLocale(locale === "en" ? "fr" : "en")}
-            className="text-sm text-stone-500 hover:text-stone-800 font-medium transition-colors"
+            className="flex items-center gap-1.5 text-sm text-stone-500 hover:text-stone-800 font-medium transition-colors"
           >
-            {langLabel}
+            {locale === "en" ? <FlagGB /> : <FlagFR />}
+            <span>{locale === "en" ? "EN" : "FR"}</span>
           </button>
 
           {session && (
