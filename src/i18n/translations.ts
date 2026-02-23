@@ -3,7 +3,6 @@ export type Locale = "en" | "fr";
 const en = {
   // App
   appName: "Our Recipes",
-  switchLang: "FR",
 
   // Navbar
   addRecipe: "+ Add recipe",
@@ -88,12 +87,22 @@ const en = {
     taste:  { label: "Taste",  tags: ["sweet", "savory", "spicy", "mild"] },
     method: { label: "Method", tags: ["baked", "fried", "grilled", "steamed", "raw", "slow-cooked"] },
   },
+
+  // Localized display labels for predefined tags (key = DB/stored value in English)
+  tagLabels: {
+    "vegan": "Vegan", "vegetarian": "Vegetarian", "pescatarian": "Pescatarian",
+    "gluten-free": "Gluten-free", "dairy-free": "Dairy-free",
+    "breakfast": "Breakfast", "lunch": "Lunch", "dinner": "Dinner",
+    "dessert": "Dessert", "snack": "Snack", "appetizer": "Appetizer", "brunch": "Brunch",
+    "sweet": "Sweet", "savory": "Savory", "spicy": "Spicy", "mild": "Mild",
+    "baked": "Baked", "fried": "Fried", "grilled": "Grilled",
+    "steamed": "Steamed", "raw": "Raw", "slow-cooked": "Slow-cooked",
+  } as Record<string, string>,
 };
 
 const fr = {
   // App
   appName: "Nos Recettes",
-  switchLang: "EN",
 
   // Navbar
   addRecipe: "+ Ajouter",
@@ -178,6 +187,17 @@ const fr = {
     taste:  { label: "Goût",    tags: ["sweet", "savory", "spicy", "mild"] },
     method: { label: "Méthode", tags: ["baked", "fried", "grilled", "steamed", "raw", "slow-cooked"] },
   },
+
+  // Localized display labels for predefined tags (key = DB/stored value in English)
+  tagLabels: {
+    "vegan": "Végétalien", "vegetarian": "Végétarien", "pescatarian": "Pescatarien",
+    "gluten-free": "Sans gluten", "dairy-free": "Sans lactose",
+    "breakfast": "Petit-déjeuner", "lunch": "Déjeuner", "dinner": "Dîner",
+    "dessert": "Dessert", "snack": "En-cas", "appetizer": "Entrée", "brunch": "Brunch",
+    "sweet": "Sucré", "savory": "Salé", "spicy": "Épicé", "mild": "Doux",
+    "baked": "Au four", "fried": "Frit", "grilled": "Grillé",
+    "steamed": "À la vapeur", "raw": "Cru", "slow-cooked": "Mijoté",
+  } as Record<string, string>,
 };
 
 export type T = typeof en;

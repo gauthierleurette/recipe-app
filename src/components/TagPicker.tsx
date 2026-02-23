@@ -61,11 +61,15 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
   // Predefined tags flattened for filtering
   const predefinedTags = Object.values(t.tagCategories).flatMap((c) => c.tags);
 
+  function matchesQuery(name: string) {
+    if (query === "") return true;
+    const q = query.toLowerCase();
+    return name.includes(q) || (t.tagLabels[name] ?? "").toLowerCase().includes(q);
+  }
+
   // Existing tags not yet selected, filtered by query
   const filteredExisting = existingTags.filter(
-    (tag) =>
-      !selected.includes(tag.name) &&
-      (query === "" || tag.name.includes(query.toLowerCase()))
+    (tag) => !selected.includes(tag.name) && matchesQuery(tag.name)
   );
 
   // Predefined tags not yet selected, filtered by query
@@ -73,7 +77,7 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
     (name) =>
       !selected.includes(name) &&
       !existingTags.some((t) => t.name === name) &&
-      (query === "" || name.includes(query.toLowerCase()))
+      matchesQuery(name)
   );
 
   const hasDropdownContent = filteredExisting.length > 0 || filteredPredefined.length > 0;
@@ -85,7 +89,7 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
         <div className="flex flex-wrap gap-2">
           {selected.map((tag) => (
             <span key={tag} className="tag-chip flex items-center gap-1">
-              #{tag}
+              #{t.tagLabels[tag] ?? tag}
               <button
                 type="button"
                 onClick={() => removeTag(tag)}
@@ -124,7 +128,7 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
                       onMouseDown={(e) => { e.preventDefault(); addTag(tag.name); }}
                       className="badge hover:bg-stone-200 transition-colors cursor-pointer"
                     >
-                      + {tag.name}
+                      + {t.tagLabels[tag.name] ?? tag.name}
                     </button>
                   ))}
                 </div>
@@ -139,7 +143,7 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
                     (name) =>
                       !selected.includes(name) &&
                       !existingTags.some((t) => t.name === name) &&
-                      (query === "" || name.includes(query.toLowerCase()))
+                      matchesQuery(name)
                   );
                   if (visibleTags.length === 0) return null;
                   return (
@@ -153,7 +157,7 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
                             onMouseDown={(e) => { e.preventDefault(); addTag(name); }}
                             className="badge hover:bg-stone-200 transition-colors cursor-pointer"
                           >
-                            + {name}
+                            + {t.tagLabels[name] ?? name}
                           </button>
                         ))}
                       </div>

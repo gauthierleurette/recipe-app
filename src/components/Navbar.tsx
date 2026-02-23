@@ -7,6 +7,7 @@ import { useLocale } from "@/context/LocaleContext";
 export function Navbar() {
   const { data: session } = useSession();
   const { t, locale, setLocale } = useLocale();
+  const langLabel = locale === "en" ? "🇬🇧 EN" : "🇫🇷 FR";
 
   return (
     <nav className="bg-white border-b border-stone-200 shadow-sm sticky top-0 z-10">
@@ -20,7 +21,7 @@ export function Navbar() {
             onClick={() => setLocale(locale === "en" ? "fr" : "en")}
             className="text-sm text-stone-500 hover:text-stone-800 font-medium transition-colors"
           >
-            {t.switchLang}
+            {langLabel}
           </button>
 
           {session ? (

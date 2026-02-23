@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { RecipeCard } from "./RecipeCard";
 import { useLocale } from "@/context/LocaleContext";
 
@@ -56,8 +57,27 @@ export function RecipeGrid({ recipes }: { recipes: Recipe[] }) {
 
   const hasFilters = query || selectedCuisine !== "all" || selectedTags.length > 0;
 
+  if (recipes.length === 0) {
+    return (
+      <div>
+        <h1 className="text-2xl font-bold text-stone-800 mb-6">{t.noRecipesYet}</h1>
+        <div className="text-center py-16 text-stone-400">
+          <p className="text-lg">{t.startBuilding}</p>
+          <Link
+            href="/recipes/new"
+            className="mt-4 inline-block bg-orange-500 hover:bg-orange-600 text-white font-medium px-4 py-2 rounded-lg transition-colors"
+          >
+            {t.addFirstRecipe}
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
+      <h1 className="text-2xl font-bold text-stone-800 mb-6">{t.recipes(recipes.length)}</h1>
+
       {/* Search + cuisine filter */}
       <div className="flex gap-3 mb-4">
         <input

@@ -33,7 +33,11 @@ export function RecipeForm({ initial }: RecipeFormProps) {
   const [description, setDescription] = useState(initial?.description ?? "");
   const [cuisine, setCuisine] = useState(initial?.cuisine ?? "");
   const [madeOn, setMadeOn] = useState(
-    initial?.madeOn ? initial.madeOn.slice(0, 10) : ""
+    initial?.madeOn
+      ? initial.madeOn.slice(0, 10)
+      : isEditing
+      ? ""
+      : new Date().toISOString().slice(0, 10)
   );
   const [prepTime, setPrepTime] = useState(String(initial?.prepTime ?? ""));
   const [cookTime, setCookTime] = useState(String(initial?.cookTime ?? ""));

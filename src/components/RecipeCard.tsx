@@ -54,6 +54,8 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             {recipe.title}
           </h2>
 
+          <p className="text-xs text-stone-400 mb-1">{t.by} {recipe.author.name}</p>
+
           {recipe.cuisine && (
             <span className="badge mb-2 self-start">{recipe.cuisine}</span>
           )}
@@ -83,7 +85,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
               <div className="flex flex-wrap gap-1">
                 {recipe.tags.map(({ tag }) => (
                   <span key={tag.id} className="tag-chip">
-                    #{tag.name}
+                    #{t.tagLabels[tag.name] ?? tag.name}
                   </span>
                 ))}
               </div>
