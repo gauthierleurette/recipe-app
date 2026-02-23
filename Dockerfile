@@ -30,7 +30,7 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
-RUN mkdir -p uploads && chown nextjs:nodejs uploads
+RUN mkdir -p uploads data && chown nextjs:nodejs uploads data
 
 USER nextjs
 
