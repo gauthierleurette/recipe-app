@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLocale } from "@/context/LocaleContext";
@@ -23,6 +24,7 @@ type RecipeCardProps = {
 
 export function RecipeCard({ recipe }: RecipeCardProps) {
   const { t, locale } = useLocale();
+  const [imgLoaded, setImgLoaded] = useState(false);
   const totalTime = (recipe.prepTime ?? 0) + (recipe.cookTime ?? 0);
 
   const formattedDate = recipe.madeOn
@@ -35,12 +37,16 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
     <Link href={`/recipes/${recipe.id}`}>
       <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer h-full flex flex-col overflow-hidden">
         {recipe.images[0] ? (
-          <div className="relative h-48 w-full">
+          <div className="relative h-48 w-full bg-stone-100">
+            {!imgLoaded && (
+              <div className="absolute inset-0 bg-stone-200 animate-pulse" />
+            )}
             <Image
               src={recipe.images[0].path}
               alt={recipe.images[0].alt || recipe.title}
               fill
-              className="object-cover"
+              className={`object-cover transition-opacity duration-300 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+              onLoad={() => setImgLoaded(true)}
             />
           </div>
         ) : (

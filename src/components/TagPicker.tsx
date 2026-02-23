@@ -47,19 +47,23 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
     onChange(selected.filter((t) => t !== name));
   }
 
+  function toggleTag(name: string) {
+    if (selected.includes(name)) removeTag(name);
+    else addTag(name);
+  }
+
   function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
       if (query.trim()) addTag(query);
     } else if (e.key === "Escape") {
       setOpen(false);
-    } else if (e.key === "Backspace" && !query && selected.length > 0) {
-      onChange(selected.slice(0, -1));
     }
+    // Backspace intentionally does NOT remove selected tags — only clears typed query
   }
 
-  // Predefined tags flattened for filtering
-  const predefinedTags = Object.values(t.tagCategories).flatMap((c) => c.tags);
+  // All predefined tag names (English keys)
+  const predefinedNames = Object.values(t.tagCategories).flatMap((c) => c.tags);
 
   function matchesQuery(name: string) {
     if (query === "") return true;
@@ -67,20 +71,17 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
     return name.includes(q) || (t.tagLabels[name] ?? "").toLowerCase().includes(q);
   }
 
-  // Existing tags not yet selected, filtered by query
+  // Existing tags from DB that are not in predefined list, not yet selected
   const filteredExisting = existingTags.filter(
-    (tag) => !selected.includes(tag.name) && matchesQuery(tag.name)
+    (tag) =>
+      !selected.includes(tag.name) &&
+      !predefinedNames.includes(tag.name) &&
+      matchesQuery(tag.name)
   );
 
-  // Predefined tags not yet selected, filtered by query
-  const filteredPredefined = predefinedTags.filter(
-    (name) =>
-      !selected.includes(name) &&
-      !existingTags.some((t) => t.name === name) &&
-      matchesQuery(name)
-  );
-
-  const hasDropdownContent = filteredExisting.length > 0 || filteredPredefined.length > 0;
+  const hasDropdownContent =
+    filteredExisting.length > 0 ||
+    Object.values(t.tagCategories).some((c) => c.tags.some(matchesQuery));
 
   return (
     <div ref={containerRef} className="space-y-2">
@@ -116,7 +117,7 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
         {/* Dropdown */}
         {open && hasDropdownContent && (
           <div className="absolute z-20 mt-1 w-full bg-white border border-stone-200 rounded-xl shadow-md max-h-72 overflow-y-auto">
-            {/* Existing tags from DB */}
+            {/* Custom existing tags from DB */}
             {filteredExisting.length > 0 && (
               <div className="p-2">
                 <p className="text-xs text-stone-400 font-medium px-2 mb-1">{t.existingTags}</p>
@@ -135,37 +136,37 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
               </div>
             )}
 
-            {/* Predefined categories */}
-            {filteredPredefined.length > 0 && (
-              <div className="p-2 border-t border-stone-100">
-                {Object.entries(t.tagCategories).map(([key, category]) => {
-                  const visibleTags = category.tags.filter(
-                    (name) =>
-                      !selected.includes(name) &&
-                      !existingTags.some((t) => t.name === name) &&
-                      matchesQuery(name)
-                  );
-                  if (visibleTags.length === 0) return null;
-                  return (
-                    <div key={key} className="mb-2 last:mb-0">
-                      <p className="text-xs text-stone-400 font-medium px-2 mb-1">{category.label}</p>
-                      <div className="flex flex-wrap gap-1.5 px-1">
-                        {visibleTags.map((name) => (
+            {/* Predefined categories — always visible, selected ones highlighted */}
+            <div className="p-2 border-t border-stone-100">
+              {Object.entries(t.tagCategories).map(([key, category]) => {
+                const visibleTags = category.tags.filter(matchesQuery);
+                if (visibleTags.length === 0) return null;
+                return (
+                  <div key={key} className="mb-2 last:mb-0">
+                    <p className="text-xs text-stone-400 font-medium px-2 mb-1">{category.label}</p>
+                    <div className="flex flex-wrap gap-1.5 px-1">
+                      {visibleTags.map((name) => {
+                        const isSelected = selected.includes(name);
+                        return (
                           <button
                             key={name}
                             type="button"
-                            onMouseDown={(e) => { e.preventDefault(); addTag(name); }}
-                            className="badge hover:bg-stone-200 transition-colors cursor-pointer"
+                            onMouseDown={(e) => { e.preventDefault(); toggleTag(name); }}
+                            className={`badge transition-colors cursor-pointer ${
+                              isSelected
+                                ? "bg-orange-100 text-orange-700 border-orange-200 hover:bg-orange-200"
+                                : "hover:bg-stone-200"
+                            }`}
                           >
-                            + {t.tagLabels[name] ?? name}
+                            {isSelected ? "✓" : "+"} {t.tagLabels[name] ?? name}
                           </button>
-                        ))}
-                      </div>
+                        );
+                      })}
                     </div>
-                  );
-                })}
-              </div>
-            )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>

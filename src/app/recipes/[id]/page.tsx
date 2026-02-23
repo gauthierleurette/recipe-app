@@ -69,7 +69,7 @@ export default async function RecipePage({ params }: { params: { id: string } })
       {recipe.tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-4">
           {recipe.tags.map(({ tag }) => (
-            <span key={tag.id} className="tag-chip">#{tag.name}</span>
+            <span key={tag.id} className="tag-chip">#{t.tagLabels[tag.name] ?? tag.name}</span>
           ))}
         </div>
       )}
