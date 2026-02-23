@@ -163,15 +163,15 @@ export function RecipeForm({ initial }: RecipeFormProps) {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-medium text-stone-800 mb-1">{t.prepField}</label>
-            <input type="number" min="0" value={prepTime} onChange={(e) => setPrepTime(e.target.value)} className="field" />
+            <input type="number" inputMode="numeric" min="0" value={prepTime} onChange={(e) => setPrepTime(e.target.value)} className="field" />
           </div>
           <div>
             <label className="block text-sm font-medium text-stone-800 mb-1">{t.cookField}</label>
-            <input type="number" min="0" value={cookTime} onChange={(e) => setCookTime(e.target.value)} className="field" />
+            <input type="number" inputMode="numeric" min="0" value={cookTime} onChange={(e) => setCookTime(e.target.value)} className="field" />
           </div>
           <div>
             <label className="block text-sm font-medium text-stone-800 mb-1">{t.servingsField}</label>
-            <input type="number" min="1" value={servings} onChange={(e) => setServings(e.target.value)} className="field" />
+            <input type="number" inputMode="numeric" min="1" value={servings} onChange={(e) => setServings(e.target.value)} className="field" />
           </div>
           <div>
             <label className="block text-sm font-medium text-stone-800 mb-1">{t.firstMadeField}</label>
@@ -192,7 +192,7 @@ export function RecipeForm({ initial }: RecipeFormProps) {
 
         {ingredients.map((ing, i) => (
           <div key={i} className="flex gap-2 items-center">
-            <input placeholder={t.qtyPlaceholder} value={ing.quantity} onChange={(e) => updateIngredient(i, "quantity", e.target.value)} className="field w-16" />
+            <input inputMode="decimal" placeholder={t.qtyPlaceholder} value={ing.quantity} onChange={(e) => updateIngredient(i, "quantity", e.target.value)} className="field w-16" />
             <input placeholder={t.unitPlaceholder} value={ing.unit} onChange={(e) => updateIngredient(i, "unit", e.target.value)} className="field w-20" />
             <input placeholder={t.ingredientNamePlaceholder} value={ing.name} onChange={(e) => updateIngredient(i, "name", e.target.value)} className="field flex-1" />
             <button type="button" onClick={() => removeIngredient(i)} className="text-stone-400 hover:text-red-500 transition-colors px-1">✕</button>

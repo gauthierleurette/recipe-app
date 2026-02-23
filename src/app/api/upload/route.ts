@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
+import sharp from "sharp";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -18,13 +19,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "file and recipeId are required" }, { status: 400 });
   }
 
-  const ext = path.extname(file.name) || ".jpg";
-  const filename = `${randomUUID()}${ext}`;
+  const MAX_BYTES = 20 * 1024 * 1024; // 20 MB
+  if (file.size > MAX_BYTES) {
+    return NextResponse.json({ error: "File too large (max 20 MB)" }, { status: 413 });
+  }
+
+  const filename = `${randomUUID()}.jpg`;
   const dir = path.join(process.cwd(), "uploads", recipeId);
   await mkdir(dir, { recursive: true });
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(dir, filename), buffer);
+  const compressed = await sharp(buffer)
+    .rotate()                                    // fix EXIF orientation (phone photos)
+    .resize({ width: 1200, withoutEnlargement: true })
+    .jpeg({ quality: 80 })
+    .toBuffer();
+
+  await writeFile(path.join(dir, filename), compressed);
 
   const image = await prisma.image.create({
     data: {
