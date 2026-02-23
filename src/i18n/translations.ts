@@ -80,6 +80,31 @@ const en = {
   existingTags: "Existing tags",
   noTagsYet: "No tags yet — type one above",
 
+  // RecipeForm image management
+  existingPhotos: "Current photos",
+  addMorePhotos: "Add more photos",
+
+  // Profile page
+  profile: "Profile",
+  accountInfo: "Account info",
+  changePassword: "Change password",
+  currentPassword: "Current password",
+  newPassword: "New password",
+  confirmNewPassword: "Confirm new password",
+  passwordChanged: "Password changed successfully!",
+  incorrectPassword: "Current password is incorrect.",
+  passwordMismatch: "Passwords do not match.",
+  passwordTooShort: "Password must be at least 8 characters.",
+
+  // Registration
+  registerTitle: "Create an account",
+  nameField: "Name",
+  registering: "Creating account…",
+  createAccount: "Create account",
+  alreadyHaveAccount: "Already have an account?",
+  noAccount: "No account yet?",
+  emailTaken: "This email is already in use.",
+
   // Tag category labels (tag names stay in English for DB consistency)
   tagCategories: {
     diet:   { label: "Diet",   tags: ["vegan", "vegetarian", "pescatarian", "gluten-free", "dairy-free"] },
@@ -179,6 +204,31 @@ const fr = {
   // TagPicker
   existingTags: "Étiquettes existantes",
   noTagsYet: "Pas encore d'étiquettes — tapez-en une ci-dessus",
+
+  // RecipeForm image management
+  existingPhotos: "Photos actuelles",
+  addMorePhotos: "Ajouter des photos",
+
+  // Profile page
+  profile: "Profil",
+  accountInfo: "Informations du compte",
+  changePassword: "Changer le mot de passe",
+  currentPassword: "Mot de passe actuel",
+  newPassword: "Nouveau mot de passe",
+  confirmNewPassword: "Confirmer le nouveau mot de passe",
+  passwordChanged: "Mot de passe modifié avec succès !",
+  incorrectPassword: "Le mot de passe actuel est incorrect.",
+  passwordMismatch: "Les mots de passe ne correspondent pas.",
+  passwordTooShort: "Le mot de passe doit contenir au moins 8 caractères.",
+
+  // Registration
+  registerTitle: "Créer un compte",
+  nameField: "Nom",
+  registering: "Création du compte…",
+  createAccount: "Créer un compte",
+  alreadyHaveAccount: "Vous avez déjà un compte ?",
+  noAccount: "Pas encore de compte ?",
+  emailTaken: "Cet e-mail est déjà utilisé.",
 
   // Tag category labels (tag names stay in English for DB consistency)
   tagCategories: {

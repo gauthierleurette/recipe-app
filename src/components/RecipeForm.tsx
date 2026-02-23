@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { TagPicker } from "./TagPicker";
 import { useLocale } from "@/context/LocaleContext";
 
 type Ingredient = { name: string; quantity: string; unit: string };
 type Step = { instruction: string };
+
+type ExistingImage = { id: string; path: string; alt: string };
 
 type RecipeFormProps = {
   initial?: {
@@ -21,6 +24,7 @@ type RecipeFormProps = {
     ingredients?: Ingredient[];
     steps?: Step[];
     tags?: string[];
+    images?: ExistingImage[];
   };
 };
 
@@ -49,6 +53,7 @@ export function RecipeForm({ initial }: RecipeFormProps) {
     initial?.steps ?? [{ instruction: "" }]
   );
   const [tags, setTags] = useState<string[]>(initial?.tags ?? []);
+  const [existingImages, setExistingImages] = useState<ExistingImage[]>(initial?.images ?? []);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -75,6 +80,12 @@ export function RecipeForm({ initial }: RecipeFormProps) {
   }
   function updateStep(i: number, value: string) {
     setSteps(steps.map((s, idx) => (idx === i ? { instruction: value } : s)));
+  }
+
+  // --- Image delete ---
+  async function deleteExistingImage(id: string) {
+    await fetch(`/api/images/${id}`, { method: "DELETE" });
+    setExistingImages((prev) => prev.filter((img) => img.id !== id));
   }
 
   // --- Submit ---
@@ -228,9 +239,31 @@ export function RecipeForm({ initial }: RecipeFormProps) {
       </section>
 
       {/* Photos */}
-      {!isEditing && (
-        <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-3">
-          <h2 className="font-semibold text-stone-800">{t.photosSection}</h2>
+      <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-3">
+        <h2 className="font-semibold text-stone-800">{t.photosSection}</h2>
+
+        {existingImages.length > 0 && (
+          <div>
+            <p className="text-xs text-stone-500 mb-2">{t.existingPhotos}</p>
+            <div className="flex flex-wrap gap-2">
+              {existingImages.map((img) => (
+                <div key={img.id} className="relative w-20 h-20 rounded-lg overflow-hidden group">
+                  <Image src={img.path} alt={img.alt || ""} fill className="object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => deleteExistingImage(img.id)}
+                    className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xl transition-opacity"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div>
+          {isEditing && <p className="text-xs text-stone-500 mb-2">{t.addMorePhotos}</p>}
           <input
             type="file"
             accept="image/*"
@@ -238,8 +271,8 @@ export function RecipeForm({ initial }: RecipeFormProps) {
             onChange={(e) => setImageFiles(Array.from(e.target.files ?? []))}
             className="text-sm text-stone-700 file:mr-3 file:px-3 file:py-1.5 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100"
           />
-        </section>
-      )}
+        </div>
+      </section>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 

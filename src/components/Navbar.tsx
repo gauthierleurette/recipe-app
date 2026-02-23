@@ -76,6 +76,13 @@ export function Navbar() {
                     >
                       {t.addRecipe}
                     </Link>
+                    <Link
+                      href="/profile"
+                      onClick={() => setMenuOpen(false)}
+                      className="block px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 transition-colors"
+                    >
+                      {t.profile}
+                    </Link>
                     <button
                       onClick={() => { signOut(); setMenuOpen(false); }}
                       className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-stone-50 transition-colors"

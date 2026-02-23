@@ -19,6 +19,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "file and recipeId are required" }, { status: 400 });
   }
 
+  const imageCount = await prisma.image.count({ where: { recipeId } });
+  if (imageCount >= 10) {
+    return NextResponse.json({ error: "Max 10 images per recipe" }, { status: 400 });
+  }
+
   const MAX_BYTES = 20 * 1024 * 1024; // 20 MB
   if (file.size > MAX_BYTES) {
     return NextResponse.json({ error: "File too large (max 20 MB)" }, { status: 413 });

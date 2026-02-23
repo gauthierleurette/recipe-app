@@ -17,6 +17,7 @@ export default async function EditRecipePage({ params }: { params: { id: string 
     include: {
       ingredients: { orderBy: { order: "asc" } },
       steps: { orderBy: { order: "asc" } },
+      images: true,
       tags: { include: { tag: true } },
     },
   });
@@ -43,6 +44,7 @@ export default async function EditRecipePage({ params }: { params: { id: string 
           })),
           steps: recipe.steps.map((s) => ({ instruction: s.instruction })),
           tags: recipe.tags.map(({ tag }) => tag.name),
+          images: recipe.images.map((img) => ({ id: img.id, path: img.path, alt: img.alt ?? "" })),
         }}
       />
     </div>

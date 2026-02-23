@@ -1,36 +1,49 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLocale } from "@/context/LocaleContext";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
   const { t } = useLocale();
+
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError("");
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    if (password !== confirmPassword) {
+      setError(t.passwordMismatch);
+      return;
+    }
+    if (password.length < 8) {
+      setError(t.passwordTooShort);
+      return;
+    }
 
-    if (result?.error) {
-      setError(t.invalidCredentials);
-      setLoading(false);
+    setLoading(true);
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+    setLoading(false);
+
+    if (res.ok) {
+      router.push("/login");
     } else {
-      router.push("/");
-      router.refresh();
+      const data = await res.json();
+      if (data.error === "emailTaken") setError(t.emailTaken);
+      else if (data.error === "passwordTooShort") setError(t.passwordTooShort);
+      else setError(t.errorGeneric);
     }
   }
 
@@ -38,10 +51,23 @@ export default function LoginPage() {
     <div className="min-h-[80vh] flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-8 w-full max-w-sm">
         <h1 className="text-2xl font-bold text-stone-800 mb-6 text-center">
-          {t.appName}
+          {t.registerTitle}
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-stone-800 mb-1">
+              {t.nameField}
+            </label>
+            <input
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="field"
+            />
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-stone-800 mb-1">
               {t.emailField}
@@ -68,6 +94,19 @@ export default function LoginPage() {
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-stone-800 mb-1">
+              {t.confirmNewPassword}
+            </label>
+            <input
+              type="password"
+              required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="field"
+            />
+          </div>
+
           {error && <p className="text-sm text-red-600">{error}</p>}
 
           <button
@@ -75,14 +114,14 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-60 text-white font-medium py-2 rounded-lg transition-colors"
           >
-            {loading ? t.signingIn : t.signIn}
+            {loading ? t.registering : t.createAccount}
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-stone-500">
-          {t.noAccount}{" "}
-          <Link href="/register" className="text-orange-500 hover:text-orange-600 font-medium">
-            {t.createAccount}
+          {t.alreadyHaveAccount}{" "}
+          <Link href="/login" className="text-orange-500 hover:text-orange-600 font-medium">
+            {t.signIn}
           </Link>
         </p>
       </div>

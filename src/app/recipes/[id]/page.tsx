@@ -2,10 +2,10 @@ import { getServerSession } from "next-auth";
 import { redirect, notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import Image from "next/image";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { DeleteRecipeButton } from "@/components/DeleteRecipeButton";
+import { RecipeImageGrid } from "@/components/RecipeImageGrid";
 import { getT } from "@/i18n/translations";
 
 export default async function RecipePage({ params }: { params: { id: string } }) {
@@ -88,20 +88,7 @@ export default async function RecipePage({ params }: { params: { id: string } })
       )}
 
       {/* Images */}
-      {recipe.images.length > 0 && (
-        <div className="grid grid-cols-2 gap-3 mb-8">
-          {recipe.images.map((img) => (
-            <div key={img.id} className="relative h-52 rounded-xl overflow-hidden shadow-sm">
-              <Image
-                src={img.path}
-                alt={img.alt || recipe.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-          ))}
-        </div>
-      )}
+      <RecipeImageGrid images={recipe.images} title={recipe.title} />
 
       {/* Ingredients */}
       {recipe.ingredients.length > 0 && (
