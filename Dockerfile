@@ -31,10 +31,12 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/bcryptjs ./node_modules/bcryptjs
+COPY --from=builder /app/scripts ./scripts
 
 RUN mkdir -p uploads data \
     && chown nextjs:nodejs uploads data \
-    && chown -R nextjs:nodejs node_modules/.prisma node_modules/@prisma node_modules/prisma
+    && chown -R nextjs:nodejs node_modules/.prisma node_modules/@prisma node_modules/prisma node_modules/bcryptjs
 
 USER nextjs
 
