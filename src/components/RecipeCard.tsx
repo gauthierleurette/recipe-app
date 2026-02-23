@@ -35,11 +35,11 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
 
   return (
     <Link href={`/recipes/${recipe.id}`}>
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer h-full flex flex-col overflow-hidden">
+      <div className="bg-surface rounded-2xl border border-rim shadow-sm hover:shadow-md transition-shadow cursor-pointer h-full flex flex-col overflow-hidden">
         {recipe.images[0] ? (
-          <div className="relative h-48 w-full bg-stone-100">
+          <div className="relative h-48 w-full bg-surface-alt">
             {!imgLoaded && (
-              <div className="absolute inset-0 bg-stone-200 animate-pulse" />
+              <div className="absolute inset-0 bg-rim animate-pulse" />
             )}
             <Image
               src={recipe.images[0].path}
@@ -50,30 +50,30 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             />
           </div>
         ) : (
-          <div className="h-48 bg-stone-100 flex items-center justify-center text-stone-300 text-4xl">
+          <div className="h-48 bg-surface-alt flex items-center justify-center text-ink-3 text-4xl">
             🍽
           </div>
         )}
 
         <div className="p-4 flex flex-col flex-1">
-          <h2 className="font-semibold text-stone-800 text-lg leading-tight mb-1">
+          <h2 className="font-display font-semibold text-ink text-lg leading-tight mb-1">
             {recipe.title}
           </h2>
 
-          <p className="text-xs text-stone-400 mb-1">{t.by} {recipe.author.name}</p>
+          <p className="text-xs text-ink-3 mb-1">{t.by} {recipe.author.name}</p>
 
           {recipe.cuisine && (
             <span className="badge mb-2 self-start">{recipe.cuisine}</span>
           )}
 
           {recipe.description && (
-            <p className="text-sm text-stone-500 mb-3 line-clamp-2">
+            <p className="text-sm text-ink-2 mb-3 line-clamp-2">
               {recipe.description}
             </p>
           )}
 
           <div className="mt-auto space-y-2">
-            <div className="flex items-center gap-3 text-xs text-stone-400">
+            <div className="flex items-center gap-3 text-xs text-ink-3">
               {totalTime > 0 && <span>{totalTime} {t.min}</span>}
               {recipe.servings && <span>{t.servings(recipe.servings)}</span>}
               {recipe.ingredients.length > 0 && (
@@ -82,7 +82,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             </div>
 
             {formattedDate && (
-              <p className="text-xs text-stone-400">
+              <p className="text-xs text-ink-3">
                 {t.madeOnLabel} {formattedDate}
               </p>
             )}

@@ -26,7 +26,7 @@ export default async function EditRecipePage({ params }: { params: { id: string 
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-stone-800 mb-6">{t.editRecipe}</h1>
+      <h1 className="font-display text-2xl font-bold text-ink mb-6">{t.editRecipe}</h1>
       <RecipeForm
         initial={{
           id: recipe.id,

@@ -41,15 +41,15 @@ export default async function RecipePage({ params }: { params: { id: string } })
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h1 className="text-3xl font-bold text-stone-800">{recipe.title}</h1>
-          <p className="text-sm text-stone-400 mt-1">
+          <h1 className="font-display text-4xl font-bold text-ink leading-tight">{recipe.title}</h1>
+          <p className="text-sm text-ink-3 mt-1">
             {t.by} {recipe.author.name}
             {recipe.cuisine && (
               <span className="ml-2 badge">{recipe.cuisine}</span>
             )}
           </p>
           {formattedDate && (
-            <p className="text-sm text-stone-400 mt-0.5">
+            <p className="text-sm text-ink-3 mt-0.5">
               {t.madeOnLabel} {formattedDate}
             </p>
           )}
@@ -57,7 +57,7 @@ export default async function RecipePage({ params }: { params: { id: string } })
         <div className="flex items-center gap-4 shrink-0 ml-4">
           <Link
             href={`/recipes/${recipe.id}/edit`}
-            className="text-sm text-orange-500 hover:text-orange-600 font-medium"
+            className="text-sm text-brand hover:text-brand-hover font-medium"
           >
             {t.edit}
           </Link>
@@ -75,7 +75,7 @@ export default async function RecipePage({ params }: { params: { id: string } })
       )}
 
       {/* Meta */}
-      <div className="flex gap-4 text-sm text-stone-500 mb-6">
+      <div className="flex gap-4 text-sm text-ink-2 mb-6">
         {recipe.prepTime && <span>{t.prepTime} {recipe.prepTime} {t.min}</span>}
         {recipe.cookTime && <span>{t.cookTime} {recipe.cookTime} {t.min}</span>}
         {totalTime > 0 && <span className="font-medium">{t.totalTime} {totalTime} {t.min}</span>}
@@ -84,7 +84,7 @@ export default async function RecipePage({ params }: { params: { id: string } })
 
       {/* Description */}
       {recipe.description && (
-        <p className="text-stone-600 mb-6">{recipe.description}</p>
+        <p className="text-ink-2 mb-6">{recipe.description}</p>
       )}
 
       {/* Images */}
@@ -92,13 +92,13 @@ export default async function RecipePage({ params }: { params: { id: string } })
 
       {/* Ingredients */}
       {recipe.ingredients.length > 0 && (
-        <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 mb-6">
-          <h2 className="font-semibold text-stone-800 mb-4">{t.ingredientsSection}</h2>
+        <section className="bg-surface rounded-2xl border border-rim shadow-sm p-6 mb-6">
+          <h2 className="font-display font-semibold text-ink mb-4">{t.ingredientsSection}</h2>
           <ul className="space-y-2">
             {recipe.ingredients.map((ing) => (
-              <li key={ing.id} className="flex gap-2 text-stone-700 text-sm">
+              <li key={ing.id} className="flex gap-2 text-ink-2 text-sm">
                 {ing.quantity && (
-                  <span className="font-medium text-stone-500 shrink-0">
+                  <span className="font-medium text-ink-3 shrink-0">
                     {ing.quantity}
                     {ing.unit ? ` ${ing.unit}` : ""}
                   </span>
@@ -112,15 +112,15 @@ export default async function RecipePage({ params }: { params: { id: string } })
 
       {/* Steps */}
       {recipe.steps.length > 0 && (
-        <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
-          <h2 className="font-semibold text-stone-800 mb-4">{t.stepsSection}</h2>
+        <section className="bg-surface rounded-2xl border border-rim shadow-sm p-6">
+          <h2 className="font-display font-semibold text-ink mb-4">{t.stepsSection}</h2>
           <ol className="space-y-4">
             {recipe.steps.map((step) => (
               <li key={step.id} className="flex gap-4">
-                <span className="shrink-0 w-6 h-6 bg-orange-100 text-orange-600 rounded-full text-xs font-bold flex items-center justify-center mt-0.5">
+                <span className="shrink-0 w-6 h-6 bg-brand-mid text-brand rounded-full text-xs font-bold flex items-center justify-center mt-0.5">
                   {step.order}
                 </span>
-                <p className="text-stone-700 text-sm leading-relaxed">
+                <p className="text-ink-2 text-sm leading-relaxed">
                   {step.instruction}
                 </p>
               </li>

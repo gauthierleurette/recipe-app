@@ -138,11 +138,11 @@ export function RecipeForm({ initial }: RecipeFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-2xl">
       {/* Basic info */}
-      <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-4">
-        <h2 className="font-semibold text-stone-800">{t.basicInfo}</h2>
+      <section className="bg-surface rounded-2xl border border-rim shadow-sm p-6 space-y-4">
+        <h2 className="font-display font-semibold text-ink">{t.basicInfo}</h2>
 
         <div>
-          <label className="block text-sm font-medium text-stone-800 mb-1">{t.titleField}</label>
+          <label className="block text-sm font-medium text-ink mb-1">{t.titleField}</label>
           <input
             required
             value={title}
@@ -152,7 +152,7 @@ export function RecipeForm({ initial }: RecipeFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-stone-800 mb-1">{t.descriptionField}</label>
+          <label className="block text-sm font-medium text-ink mb-1">{t.descriptionField}</label>
           <textarea
             rows={3}
             value={description}
@@ -162,7 +162,7 @@ export function RecipeForm({ initial }: RecipeFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-stone-800 mb-1">{t.cuisineField}</label>
+          <label className="block text-sm font-medium text-ink mb-1">{t.cuisineField}</label>
           <input
             placeholder={t.cuisinePlaceholder}
             value={cuisine}
@@ -173,55 +173,55 @@ export function RecipeForm({ initial }: RecipeFormProps) {
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div>
-            <label className="block text-sm font-medium text-stone-800 mb-1">{t.prepField}</label>
+            <label className="block text-sm font-medium text-ink mb-1">{t.prepField}</label>
             <input type="number" inputMode="numeric" min="0" value={prepTime} onChange={(e) => setPrepTime(e.target.value)} className="field" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-stone-800 mb-1">{t.cookField}</label>
+            <label className="block text-sm font-medium text-ink mb-1">{t.cookField}</label>
             <input type="number" inputMode="numeric" min="0" value={cookTime} onChange={(e) => setCookTime(e.target.value)} className="field" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-stone-800 mb-1">{t.servingsField}</label>
+            <label className="block text-sm font-medium text-ink mb-1">{t.servingsField}</label>
             <input type="number" inputMode="numeric" min="1" value={servings} onChange={(e) => setServings(e.target.value)} className="field" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-stone-800 mb-1">{t.firstMadeField}</label>
+            <label className="block text-sm font-medium text-ink mb-1">{t.firstMadeField}</label>
             <input type="date" value={madeOn} onChange={(e) => setMadeOn(e.target.value)} className="field" />
           </div>
         </div>
       </section>
 
       {/* Tags */}
-      <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-3">
-        <h2 className="font-semibold text-stone-800">{t.tagsSection}</h2>
+      <section className="bg-surface rounded-2xl border border-rim shadow-sm p-6 space-y-3">
+        <h2 className="font-display font-semibold text-ink">{t.tagsSection}</h2>
         <TagPicker selected={tags} onChange={setTags} />
       </section>
 
       {/* Ingredients */}
-      <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-3">
-        <h2 className="font-semibold text-stone-800">{t.ingredientsForm}</h2>
+      <section className="bg-surface rounded-2xl border border-rim shadow-sm p-6 space-y-3">
+        <h2 className="font-display font-semibold text-ink">{t.ingredientsForm}</h2>
 
         {ingredients.map((ing, i) => (
           <div key={i} className="flex gap-2 items-center">
             <input inputMode="decimal" placeholder={t.qtyPlaceholder} value={ing.quantity} onChange={(e) => updateIngredient(i, "quantity", e.target.value)} className="field w-16" />
             <input placeholder={t.unitPlaceholder} value={ing.unit} onChange={(e) => updateIngredient(i, "unit", e.target.value)} className="field w-20" />
             <input placeholder={t.ingredientNamePlaceholder} value={ing.name} onChange={(e) => updateIngredient(i, "name", e.target.value)} className="field flex-1" />
-            <button type="button" onClick={() => removeIngredient(i)} className="text-stone-400 hover:text-red-500 transition-colors px-1">✕</button>
+            <button type="button" onClick={() => removeIngredient(i)} className="text-ink-3 hover:text-red-500 transition-colors px-1">✕</button>
           </div>
         ))}
 
-        <button type="button" onClick={addIngredient} className="text-sm text-orange-500 hover:text-orange-600 font-medium">
+        <button type="button" onClick={addIngredient} className="text-sm text-brand hover:text-brand-hover font-medium">
           {t.addIngredient}
         </button>
       </section>
 
       {/* Steps */}
-      <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-3">
-        <h2 className="font-semibold text-stone-800">{t.stepsForm}</h2>
+      <section className="bg-surface rounded-2xl border border-rim shadow-sm p-6 space-y-3">
+        <h2 className="font-display font-semibold text-ink">{t.stepsForm}</h2>
 
         {steps.map((step, i) => (
           <div key={i} className="flex gap-3 items-start">
-            <span className="mt-2 text-sm font-bold text-stone-400 w-5 shrink-0">{i + 1}</span>
+            <span className="mt-2 text-sm font-bold text-ink-3 w-5 shrink-0">{i + 1}</span>
             <textarea
               rows={2}
               placeholder={t.stepPlaceholder(i + 1)}
@@ -229,22 +229,22 @@ export function RecipeForm({ initial }: RecipeFormProps) {
               onChange={(e) => updateStep(i, e.target.value)}
               className="field flex-1"
             />
-            <button type="button" onClick={() => removeStep(i)} className="mt-2 text-stone-400 hover:text-red-500 transition-colors px-1">✕</button>
+            <button type="button" onClick={() => removeStep(i)} className="mt-2 text-ink-3 hover:text-red-500 transition-colors px-1">✕</button>
           </div>
         ))}
 
-        <button type="button" onClick={addStep} className="text-sm text-orange-500 hover:text-orange-600 font-medium">
+        <button type="button" onClick={addStep} className="text-sm text-brand hover:text-brand-hover font-medium">
           + {t.stepsForm}
         </button>
       </section>
 
       {/* Photos */}
-      <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-3">
-        <h2 className="font-semibold text-stone-800">{t.photosSection}</h2>
+      <section className="bg-surface rounded-2xl border border-rim shadow-sm p-6 space-y-3">
+        <h2 className="font-display font-semibold text-ink">{t.photosSection}</h2>
 
         {existingImages.length > 0 && (
           <div>
-            <p className="text-xs text-stone-500 mb-2">{t.existingPhotos}</p>
+            <p className="text-xs text-ink-3 mb-2">{t.existingPhotos}</p>
             <div className="flex flex-wrap gap-2">
               {existingImages.map((img) => (
                 <div key={img.id} className="relative w-20 h-20 rounded-lg overflow-hidden group">
@@ -263,13 +263,13 @@ export function RecipeForm({ initial }: RecipeFormProps) {
         )}
 
         <div>
-          {isEditing && <p className="text-xs text-stone-500 mb-2">{t.addMorePhotos}</p>}
+          {isEditing && <p className="text-xs text-ink-3 mb-2">{t.addMorePhotos}</p>}
           <input
             type="file"
             accept="image/*"
             multiple
             onChange={(e) => setImageFiles(Array.from(e.target.files ?? []))}
-            className="text-sm text-stone-700 file:mr-3 file:px-3 file:py-1.5 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100"
+            className="text-sm text-ink-2 file:mr-3 file:px-3 file:py-1.5 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-brand-tint file:text-brand hover:file:bg-brand-mid"
           />
         </div>
       </section>
@@ -280,14 +280,14 @@ export function RecipeForm({ initial }: RecipeFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="bg-orange-500 hover:bg-orange-600 disabled:opacity-60 text-white font-medium px-6 py-2.5 rounded-lg transition-colors"
+          className="bg-brand hover:bg-brand-hover disabled:opacity-60 text-white font-medium px-6 py-2.5 rounded-lg transition-colors"
         >
           {loading ? t.saving : isEditing ? t.saveChanges : t.createRecipe}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
-          className="text-stone-500 hover:text-stone-700 font-medium px-4 py-2.5 transition-colors"
+          className="text-ink-3 hover:text-ink font-medium px-4 py-2.5 transition-colors"
         >
           {t.cancel}
         </button>
