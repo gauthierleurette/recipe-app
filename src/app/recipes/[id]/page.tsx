@@ -1,14 +1,19 @@
 import { getServerSession } from "next-auth";
 import { redirect, notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { DeleteRecipeButton } from "@/components/DeleteRecipeButton";
+import { getT } from "@/i18n/translations";
 
 export default async function RecipePage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
+
+  const locale = cookies().get("locale")?.value ?? "en";
+  const t = getT(locale);
 
   const recipe = await prisma.recipe.findUnique({
     where: { id: params.id },
@@ -25,6 +30,12 @@ export default async function RecipePage({ params }: { params: { id: string } })
 
   const totalTime = (recipe.prepTime ?? 0) + (recipe.cookTime ?? 0);
 
+  const formattedDate = recipe.madeOn
+    ? new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", year: "numeric" }).format(
+        new Date(recipe.madeOn)
+      )
+    : null;
+
   return (
     <div className="max-w-2xl">
       {/* Header */}
@@ -32,18 +43,23 @@ export default async function RecipePage({ params }: { params: { id: string } })
         <div>
           <h1 className="text-3xl font-bold text-stone-800">{recipe.title}</h1>
           <p className="text-sm text-stone-400 mt-1">
-            by {recipe.author.name}
+            {t.by} {recipe.author.name}
             {recipe.cuisine && (
               <span className="ml-2 badge">{recipe.cuisine}</span>
             )}
           </p>
+          {formattedDate && (
+            <p className="text-sm text-stone-400 mt-0.5">
+              {t.madeOnLabel} {formattedDate}
+            </p>
+          )}
         </div>
         <div className="flex items-center gap-4 shrink-0 ml-4">
           <Link
             href={`/recipes/${recipe.id}/edit`}
             className="text-sm text-orange-500 hover:text-orange-600 font-medium"
           >
-            Edit
+            {t.edit}
           </Link>
           <DeleteRecipeButton id={recipe.id} />
         </div>
@@ -60,10 +76,10 @@ export default async function RecipePage({ params }: { params: { id: string } })
 
       {/* Meta */}
       <div className="flex gap-4 text-sm text-stone-500 mb-6">
-        {recipe.prepTime && <span>Prep: {recipe.prepTime} min</span>}
-        {recipe.cookTime && <span>Cook: {recipe.cookTime} min</span>}
-        {totalTime > 0 && <span className="font-medium">Total: {totalTime} min</span>}
-        {recipe.servings && <span>{recipe.servings} servings</span>}
+        {recipe.prepTime && <span>{t.prepTime} {recipe.prepTime} {t.min}</span>}
+        {recipe.cookTime && <span>{t.cookTime} {recipe.cookTime} {t.min}</span>}
+        {totalTime > 0 && <span className="font-medium">{t.totalTime} {totalTime} {t.min}</span>}
+        {recipe.servings && <span>{t.servings(recipe.servings)}</span>}
       </div>
 
       {/* Description */}
@@ -90,7 +106,7 @@ export default async function RecipePage({ params }: { params: { id: string } })
       {/* Ingredients */}
       {recipe.ingredients.length > 0 && (
         <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 mb-6">
-          <h2 className="font-semibold text-stone-800 mb-4">Ingredients</h2>
+          <h2 className="font-semibold text-stone-800 mb-4">{t.ingredientsSection}</h2>
           <ul className="space-y-2">
             {recipe.ingredients.map((ing) => (
               <li key={ing.id} className="flex gap-2 text-stone-700 text-sm">
@@ -110,7 +126,7 @@ export default async function RecipePage({ params }: { params: { id: string } })
       {/* Steps */}
       {recipe.steps.length > 0 && (
         <section className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
-          <h2 className="font-semibold text-stone-800 mb-4">Steps</h2>
+          <h2 className="font-semibold text-stone-800 mb-4">{t.stepsSection}</h2>
           <ol className="space-y-4">
             {recipe.steps.map((step) => (
               <li key={step.id} className="flex gap-4">

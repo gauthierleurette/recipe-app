@@ -21,6 +21,7 @@ model Recipe {
   title       String
   description String?
   cuisine     String?
+  madeOn      DateTime?
   prepTime    Int?         // minutes
   cookTime    Int?         // minutes
   servings    Int?
