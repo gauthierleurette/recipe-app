@@ -11,6 +11,13 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Sentry build-time args (source maps upload)
+ARG NEXT_PUBLIC_SENTRY_DSN
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+
 RUN npx prisma generate
 RUN npm run build
 
@@ -32,11 +39,12 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/bcryptjs ./node_modules/bcryptjs
+COPY --from=builder /app/node_modules/@sentry ./node_modules/@sentry
 COPY --from=builder /app/scripts ./scripts
 
 RUN mkdir -p uploads data \
     && chown nextjs:nodejs uploads data \
-    && chown -R nextjs:nodejs node_modules/.prisma node_modules/@prisma node_modules/prisma node_modules/bcryptjs
+    && chown -R nextjs:nodejs node_modules/.prisma node_modules/@prisma node_modules/prisma node_modules/bcryptjs node_modules/@sentry
 
 USER nextjs
 
