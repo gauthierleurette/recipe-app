@@ -1,9 +1,15 @@
+import { withSentryConfig } from "@sentry/nextjs";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
   experimental: {
+    instrumentationHook: true,
     outputFileTracingIncludes: {
-      "/**": ["./node_modules/.prisma/client/**"],
+      "/**": [
+        "./node_modules/.prisma/client/**",
+        "./node_modules/@sentry/**",
+      ],
     },
   },
   async rewrites() {
@@ -16,4 +22,10 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  silent: true,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  hideSourceMaps: true,
+});
